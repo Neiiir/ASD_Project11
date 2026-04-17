@@ -200,15 +200,15 @@ def menu():
 
     while True:
         print("\n=== SISTEM ANTRIAN KLINIK ===")
-        print("1. Tambah Pasien")
+        print("1. Tambah Data Pasien")
         print("2. Lihat Antrian")
         print("3. Panggil Pasien Berikutnya")
         print("4. Update Data Pasien")
-        print("5. Hapus Pasien")
+        print("5. Hapus Data Pasien")
         print("6. Keluar")
 
         pilihan = input("Pilih menu: ")
-
+        
         if pilihan == "1":
             tambah_pasien()
         elif pilihan == "2":
