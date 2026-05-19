@@ -94,16 +94,16 @@ class AntrianLinkedList:
         while current:
             self._print_pasien(current)
             current = current.next
-        print("-" * 95)
+        print("╚" + "═" * 93 + "╝\n")
 
     def _print_header(self):
-        print("\n" + "="*95)
-        print(f"{'No':<3} | {'Nama':<20} | {'Umur':<4} | {'JK':<3} | {'Tipe':<8} | {'Keluhan'}")
-        print("-" * 95)
+        print("\n╔" + "═"*93 + "╗")
+        print(f"║{'No':<3} | {'Nama':<20} | {'Umur':<4} | {'JK':<3} | {'Tipe':<8} | {'Keluhan':<40}║")
+        print("╠" + "═" * 93 + "╣")
 
     def _print_pasien(self, p):
         tipe_txt = "BPJS" if p.is_bpjs else "Umum"
-        print(f"{p.nomor:<3} | {p.nama:<20} | {p.umur:<4} | {p.kelamin:<3} | {tipe_txt:<8} | {p.keluhan}")
+        print(f"║{p.nomor:<3} | {p.nama:<20} | {p.umur:<4} | {p.kelamin:<3} | {tipe_txt:<8} | {p.keluhan:<40}║")
 
 # =========================
 # FILE HANDLING (UTF-8)
@@ -274,24 +274,40 @@ def buat_pdf_pasien(pasien):
 # LOGIC & UI
 # =========================
 def input_boolean_bpjs():
+    RED = "\033[31m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+
     while True:
-        pilihan = input("Apakah pasien BPJS? (y/n): ").lower()
+        pilihan = input(f"{BOLD}{GREEN}➔{RESET} Apakah pasien BPJS? (y/n): ").lower()
         if pilihan == 'y': return True
         if pilihan == 'n': return False
-        print("Input tidak valid, gunakan 'y' atau 'n'.")
+        print(f"\n{BOLD}{RED}================ INVALID ==============={RESET}")
+        print(f"{RED}Input tidak valid, gunakan 'y' atau 'n'.{RESET}\n")
 
 def input_jenis_kelamin():
+    RED = "\033[31m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+
     while True:
-        jk = input("Jenis Kelamin (L/P): ").upper()
+        jk = input(f"{BOLD}{GREEN}➔{RESET} Jenis Kelamin (L/P): ").upper()
 
         if jk in ["L", "P"]:
             return jk
-
-        print("Input tidak valid! Gunakan hanya L atau P.")
+        print(f"\n{BOLD}{RED}================= INVALID ================{RESET}")
+        print(f"{RED}Input tidak valid! Gunakan hanya L atau P {RESET}\n")
     
 def input_umur():
+    RED = "\033[31m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+
     while True:
-        umur = input("Umur: ")
+        umur = input(f"{BOLD}{GREEN}➔{RESET} Umur: ")
 
         if umur.isdigit():
 
@@ -299,81 +315,122 @@ def input_umur():
 
             if umur_int > 0 and umur_int <= 120:
                 return umur
-
-        print("Input umur harus berupa angka valid!")
+        print(f"\n{BOLD}{RED}============ INVALID ==========={RESET}")
+        print(f"{RED}Input umur harus berupa angka valid!{RESET}\n")
 
 def tambah_pasien():
-    nama = input("Nama Pasien: ")
+    RED = "\033[31m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+
+    nama = input(f"{BOLD}{GREEN}➔{RESET} Nama Pasien: ")
     umur = input_umur()
     jk = input_jenis_kelamin()
     is_bpjs = input_boolean_bpjs()
-    keluhan = input("Keluhan: ")
+    keluhan = input(f"{BOLD}{GREEN}➔{RESET} Keluhan: ")
 
     antrian.enqueue(nama, umur, jk, is_bpjs, keluhan)
     save_data()
 
-    print("\n[V] Pasien berhasil masuk antrian!")
+    print(f"\n{BOLD}{GREEN}============= SUCCESS ============{RESET}")
+    print(f"{GREEN}[V] Pasien berhasil masuk antrian!{RESET}\n")
 
 def cari_pasien():
-    nama = input("Masukkan nama pasien yang dicari: ")
+    RED = "\033[31m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+
+    nama = input(f"{BOLD}{GREEN}➔{RESET} Masukkan nama pasien yang dicari: ")
     hasil = antrian.cari_nama(nama)
     
     if not hasil:
-        print(f"\n[!] Pasien dengan nama '{nama}' tidak ditemukan.")
+        print(f"\n{BOLD}{RED}============== ERROR ============={RESET}")
+        print(f"{RED}[!] Pasien dengan nama '{nama}' tidak ditemukan.{RESET}\n")
     else:
-        print(f"\n--- HASIL PENCARIAN ({len(hasil)} ditemukan) ---")
-        print("=" * 95)
-        print(f"{'No':<3} | {'Nama':<20} | {'Umur':<4} | {'JK':<3} | {'Tipe':<8} | {'Keluhan'}")
-        print("-" * 95)
+        print("╔" + "═"*31 + f" HASIL PENCARIAN ({len(hasil)} ditemukan) " + "═"*31 + "╗")
+        print(f"║{'No':<3} | {'Nama':<20} | {'Umur':<4} | {'JK':<3} | {'Tipe':<8} | {'Keluhan':<40}║")
+        print("╠" + "═" * 93 + "╣")
         for p in hasil:
             status = "BPJS" if p.is_bpjs else "Umum"
-            print(f"{p.nomor:<3} | {p.nama:<20} | {p.umur:<4} | {p.kelamin:<3} | {status:<8} | {p.keluhan}")
-        print("=" * 95)
+            print(f"║{p.nomor:<3} | {p.nama:<20} | {p.umur:<4} | {p.kelamin:<3} | {status:<8} | {p.keluhan:<40}║")
+        print("╚" + "═" * 93 + "╝\n")
 
 def panggil_pasien():
+    YELLOW = "\033[33m" 
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    RED = "\033[31m"
+
     pasien = antrian.dequeue()
     if pasien:
         save_data()
         status = "BPJS" if pasien.is_bpjs else "Umum"
-        print("\n>>> MEMANGGIL PASIEN BERIKUTNYA:")
+        print(f"\n{BOLD}{YELLOW}>>> MEMANGGIL PASIEN BERIKUTNYA [!]:{RESET}")
         print(f"    Nama    : {pasien.nama}")
         print(f"    Tipe    : {status}")
-        print(f"    Keluhan : {pasien.keluhan}")
+        print(f"    Keluhan : {pasien.keluhan}\n")
     else:
-        print("\n[!] Tidak ada antrian untuk dipanggil.")
+        print(f"\n{BOLD}{RED}================ ERROR ==============={RESET}")
+        print(f"{RED}[!] Tidak ada antrian untuk dipanggil.{RESET}\n")
 
 def update_pasien():
     antrian.tampilkan()
+    RED = "\033[31m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+    
     try:
-        nomor = int(input("\nNomor antrian yang diupdate: "))
-        nama = input("Nama Baru: ")
+        nomor = int(input(f"\n{BOLD}{GREEN}➔{RESET} Nomor antrian yang diupdate: "))
+        nama = input(f"{BOLD}{GREEN}➔{RESET} Nama Baru: ")
         umur = input_umur()
         jk = input_jenis_kelamin()
         is_bpjs = input_boolean_bpjs()
-        keluhan = input("Keluhan Baru: ")
+        keluhan = input(f"{BOLD}{GREEN}➔{RESET} Keluhan Baru: ")
         if antrian.update(nomor, nama, umur, jk, is_bpjs, keluhan):
             save_data()
-            print("[V] Data pasien berhasil diperbarui.")
+            print(f"\n{BOLD}{GREEN}============== SUCCESS ============={RESET}")
+            print(f"{GREEN}[V] Data pasien berhasil diperbarui.{RESET}\n")
         else:
-            print("[!] Nomor antrian tidak ditemukan.")
+            print(f"\n{BOLD}{RED}============== ERROR ============={RESET}")
+            print(f"{RED}[!] Nomor antrian tidak ditemukan.{RESET}\n")
     except ValueError:
-        print("[!] Masukkan nomor yang valid.")
+        print(f"\n{BOLD}{RED}=========== INVALID =========={RESET}")
+        print(f"{RED}[!] Masukkan nomor yang valid.{RESET}\n")
 
 def hapus_pasien():
     antrian.tampilkan()
+    RED = "\033[31m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+
     try:
-        nomor = int(input("\nNomor pasien yang akan dihapus: "))
+        nomor = int(input(f"{BOLD}{GREEN}➔{RESET} Nomor pasien yang akan dihapus: "))
         if antrian.hapus(nomor):
             save_data()
-            print("[V] Pasien berhasil dihapus.")
+            print(f"\n{BOLD}{GREEN}========== SUCCESS ========={RESET}")
+            print(f"{GREEN}[V] Pasien berhasil dihapus.{RESET}\n")
         else:
-            print("[!] Nomor tidak ditemukan.")
+            print(f"\n{BOLD}{RED}========== ERROR ========={RESET}")
+            print(f"{RED}[!] Nomor tidak ditemukan.{RESET}\n")
     except ValueError:
-        print("[!] Input tidak valid.")
+        print(f"\n{BOLD}{RED}======== ERROR ======={RESET}")
+        print(f"{RED}[!] Input tidak valid.{RESET}\n")
 
 def reset_data():
+    antrian.tampilkan()
+    RED = "\033[31m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m" 
+
+    print(f"{BOLD}{YELLOW}================ PERINGATAN [!] ================{RESET}")
     konfirmasi = input(
-        "\nYakin ingin menghapus SEMUA data antrian? (y/n): "
+        f"{YELLOW}Yakin ingin menghapus SEMUA data antrian? (y/n):{RESET} "
     ).lower()
 
     if konfirmasi == "y":
@@ -388,14 +445,21 @@ def reset_data():
             pass
         
         save_data()
-        print("\n[V] Semua data antrian berhasil direset.")
+        print(f"\n{BOLD}{GREEN}================ SUCCESS ==============={RESET}")
+        print(f"{GREEN}[V] Semua data antrian berhasil direset.{RESET}\n")
 
     else:
-        print("\n[!] Reset dibatalkan.")
+        print("\n[!] Reset dibatalkan.\n")
 
 def cetak_pdf_pasien():
+    RED = "\033[31m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+
     if antrian.head is None:
-        print("\n[!] Tidak ada data pasien.")
+        print(f"\n{BOLD}{RED}========== ERROR ========={RESET}")
+        print(f"{RED}[!] Tidak ada data pasien.{RESET}\n")
         return
 
     antrian.tampilkan()
@@ -410,31 +474,79 @@ def cetak_pdf_pasien():
 
                 buat_pdf_pasien(current)
 
-                print("\n[V] Surat antrian berhasil dicetak.")
+                print(f"\n{BOLD}{GREEN}============== SUCCESS ============{RESET}")
+                print(f"{BOLD}{GREEN}[V] Surat antrian berhasil dicetak.{RESET}\n")
                 return
 
             current = current.next
-
-        print("[!] Nomor antrian tidak ditemukan.")
+        print(f"\n{BOLD}{RED}============== ERROR ============={RESET}")
+        print(f"{RED}[!] Nomor antrian tidak ditemukan.{RESET}\n")
 
     except ValueError:
-        print("[!] Input nomor harus angka.")
+        print(f"\n{BOLD}{RED}=========== ERROR =========={RESET}")
+        print(f"{RED}[!] Input nomor harus angka.{RESET}\n")
 
 def menu():
     load_data()
+
+    # Color
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GREEN = "\033[32m"
+    RED = "\033[31m"
+    MAGENTA = "\033[35m"
+    NAVY = "\033[38;5;19m"
+    TEAL = "\033[38;5;30m"
+
+
     while True:
-        print("\n======= SISTEM KLINIK SV IPB UNIVERSITY =======")
-        print("1. Tambah Pasien")
-        print("2. Lihat Seluruh Antrian")
-        print("3. Panggil Pasien Berikutnya")
-        print("4. Cari Pasien")
-        print("5. Update Data Pasien")
-        print("6. Hapus Pasien dari Antrian")
-        print("7. Cetak Surat Antrian PDF")
-        print("8. Reset Semua Data")
-        print("9. Keluar Program")
-        
-        pilih = input("\nPilih menu [1-9]: ")
+        # ==+ LOGO ===
+        print(f"{NAVY}          ▄▄▄███████▄▄▄          {RESET}")
+        print(f"{NAVY}       ▄█████████████████▄       {RESET}")
+        print(f"{NAVY}     ▄█████████████████████▄     {RESET}")
+        print(f"{NAVY}    ██████████▀   ▀██████████    {RESET}{GREEN}             ▄▄▄▄▄▄▄      {RESET}")
+        print(f"{NAVY}   ████████▀{RESET}   ▄█▄   {NAVY}▀████████   {RESET}{GREEN}             ███████      {RESET}")
+        print(f"{NAVY}  ████████{RESET}   ▀█████▀   {NAVY}████████  {RESET}{GREEN}      ▄▄▄▄▄▄▄███████▄▄▄▄▄▄▄{RESET}")
+        print(f"{NAVY}  ████████{RESET} ▀█████████▀ {NAVY}████████  {RESET}{GREEN}      █████████████████████{RESET}")
+        print(f"{NAVY}  ████████{RESET}  ▀███████▀  {NAVY}████████  {RESET}{GREEN}      ▀▀▀▀▀▀▀███████▀▀▀▀▀▀▀{RESET}")
+        print(f"{NAVY}  ████████▄{RESET}  ▄ █ █ ▄  {NAVY}▄████████  {RESET}{GREEN}             ███████      {RESET}")
+        print(f"{NAVY}   █████████▄{RESET} ▀▀▀▀▀ {NAVY}▄█████████   {RESET}{GREEN}             ▀▀▀▀▀▀▀      {RESET}")
+        print(f"{NAVY}    █████████████████████████    {RESET}")
+        print(f"{NAVY}     ▀█████████████████████▀     {RESET}")
+        print(f"{NAVY}       ▀█████████████████▀       {RESET}")
+        print(f"{NAVY}          ▀▀▀███████▀▀▀          {RESET}")
+        print(f"   {BOLD}I P B  U N I V E R S I T Y{RESET}    |    {BOLD}{GREEN}K L I N I K  V O K A S I{RESET}\n")
+
+        # === Title ===
+        print(f"{TEAL}╔════════════════════════════════════════════════════════╗{RESET}")
+        print(f"{TEAL}║{RESET} {BOLD}{NAVY}         + SISTEM KLINIK SV IPB UNIVERSITY            {RESET} {TEAL}║{RESET}")
+        print(f"{TEAL}╠═══╗════════════════════════════════════════════════════╣{RESET}")
+
+        # ==== Daftar Menu ====
+        print(f"{TEAL}║{RESET} 1 {TEAL}║{RESET} Tambah Pasien                                      {RESET}{TEAL}║{RESET}")
+        print(f"{TEAL}║---║----------------------------------------------------║{RESET}")
+        print(f"{TEAL}║{RESET} 2 {TEAL}║{RESET} Lihat Seluruh Antrian                              {RESET}{TEAL}║{RESET}")
+        print(f"{TEAL}║---║----------------------------------------------------║{RESET}")
+        print(f"{TEAL}║{RESET} 3 {TEAL}║{RESET} Panggil Pasien Berikutnya                          {RESET}{TEAL}║{RESET}")
+        print(f"{TEAL}║---║----------------------------------------------------║{RESET}")
+        print(f"{TEAL}║{RESET} 4 {TEAL}║{RESET} Cari Pasien                                        {RESET}{TEAL}║{RESET}")
+        print(f"{TEAL}║---║----------------------------------------------------║{RESET}")
+        print(f"{TEAL}║{RESET} 5 {TEAL}║{RESET} Update Data Pasien                                 {RESET}{TEAL}║{RESET}")
+        print(f"{TEAL}║---║----------------------------------------------------║{RESET}")
+        print(f"{TEAL}║{RESET} 6 {TEAL}║{RESET} Hapus Pasien dari Antrian                          {RESET}{TEAL}║{RESET}")
+        print(f"{TEAL}║---║----------------------------------------------------║{RESET}")
+        print(f"{TEAL}║{RESET} 7 {TEAL}║{RESET} Cetak Surat Antrian PDF                            {RESET}{TEAL}║{RESET}")
+        print(f"{TEAL}║---║----------------------------------------------------║{RESET}")
+        print(f"{TEAL}║{RESET} 8 {TEAL}║{RESET} Reset Semua Data                                   {RESET}{TEAL}║{RESET}")
+        print(f"{TEAL}║---║----------------------------------------------------║{RESET}")
+        print(f"{TEAL}║{RESET} 9 {TEAL}║{RESET} Keluar Program                                     {RESET}{TEAL}║{RESET}")
+        print(f"{TEAL}╚═══╝════════════════════════════════════════════════════╝{RESET}")
+
+        # === Logic Menu ===
+
+        pilih = input(f"\n{BOLD}{GREEN}➔{RESET} Pilih menu [1-9]: ")
+
+
         if pilih == "1": tambah_pasien()
         elif pilih == "2": antrian.tampilkan()
         elif pilih == "3": panggil_pasien()
@@ -444,10 +556,13 @@ def menu():
         elif pilih == "7": cetak_pdf_pasien()
         elif pilih == "8": reset_data()
         elif pilih == "9": 
-            print("Program selesai.")
+            print(f"{GREEN}╔═════╣{RESET}{MAGENTA}Terima Kasih Master, See You{RESET} {MAGENTA}{BOLD}Tomorow!{RESET}{GREEN}╠═════╗{RESET}")
+            print(f"{BOLD}{GREEN}➔{RESET}                {TEAL}{BOLD}Program selesai...{RESET}               {GREEN}║{RESET}")
+            print(f"{GREEN}╚═════════════════════════════════════════════════╝{RESET}")
             break
         else: 
-            print("Pilihan tidak valid.")
+            print(f"\n{RED}{BOLD}======== ERROR ========{RESET}")
+            print(f"{BOLD}{RED}➔{RESET} Pilihan tidak valid.\n")
 
 if __name__ == "__main__":
     menu()
